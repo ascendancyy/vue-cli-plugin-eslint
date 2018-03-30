@@ -1,0 +1,44 @@
+{
+  "name": "@ascendancyy/vue-cli-plugin-eslint",
+  "version": "1.0.0",
+  "description": "eslint plugin for vue-cli",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ./**/*.js ./*.js",
+    "jest": "cross-env VUE_CLI_TEST=true jest --runInBand --env=node",
+    "test": "npm run lint && npm run jest"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ascendancyy/vue-cli-plugin-eslint.git"
+  },
+  "keywords": [
+    "vue",
+    "cli",
+    "eslint"
+  ],
+  "author": "Stephen Lam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ascendancyy/vue-cli-plugin-eslint/issues"
+  },
+  "homepage": "https://github.com/ascendancyy/vue-cli-plugin-eslint#readme",
+  "dependencies": {
+    "babel-eslint": "^8.2.2",
+    "chalk": "^2.3.2",
+    "eslint": "^4.19.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-vue": "^4.4.0",
+    "javascript-stringify": "^1.6.0"
+  },
+  "devDependencies": {
+    "@ascendancyy/eslint-config-eva": "^2.0.0",
+    "@vue/cli": "^3.0.0-beta.6",
+    "@vue/cli-test-utils": "^3.0.0-beta.6",
+    "cross-env": "^5.1.4",
+    "jest": "^22.4.3"
+  }
+}
