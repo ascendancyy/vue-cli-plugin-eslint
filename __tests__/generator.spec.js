@@ -8,7 +8,6 @@ test('base', async () => {
   });
 
   expect(pkg.scripts.lint).toBeTruthy();
-  expect(pkg.devDependencies).toHaveProperty('@ascendancyy/eslint-config-eva');
 });
 
 test('lint on save', async () => {

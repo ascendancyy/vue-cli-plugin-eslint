@@ -21,8 +21,6 @@ module.exports = (api, { lintOn = [] }) => {
     devDependencies: {},
   };
 
-  Object.assign(pkg.devDependencies, { '@ascendancyy/eslint-config-eva': '^2.0.0' });
-
   if (!lintOn.includes('save')) {
     pkg.vue = {
       lintOnSave: false, // eslint-loader configured in runtime plugin
