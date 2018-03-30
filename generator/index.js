@@ -61,7 +61,7 @@ module.exports = (api, { lintOn = [] }) => {
       Object.assign(config.env, { jest: true });
     }
     api.render((files) => {
-      files['tests/unit/.eslintrc.js'] = `module.exports = ${stringifyJS(config, null, 2)}`;
+      files['tests/unit/.eslintrc.js'] = `module.exports = ${stringifyJS(config, null, 2)};`;
     });
   }
 
@@ -78,7 +78,7 @@ module.exports = (api, { lintOn = [] }) => {
       },
     };
     api.render((files) => {
-      files['tests/e2e/.eslintrc.js'] = `module.exports = ${stringifyJS(config, null, 2)}`;
+      files['tests/e2e/.eslintrc.js'] = `module.exports = ${stringifyJS(config, null, 2)};`;
     });
   }
 
