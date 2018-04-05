@@ -8,6 +8,17 @@
 
 const lint = require('../lint');
 const stringifyJS = require('javascript-stringify');
+const micromatch = require('micromatch');
+const fs = require('fs');
+const path = require('path');
+
+function getDirectoryEntries(directory) {
+  try {
+    return fs.readdirSync(directory);
+  } catch (e) {
+    return [];
+  }
+}
 
 module.exports = (api, { lintOn = [] }) => {
   if (typeof lintOn === 'string') {
@@ -47,37 +58,55 @@ module.exports = (api, { lintOn = [] }) => {
   const hasJest = api.hasPlugin('unit-jest');
 
   if (hasMocha || hasJest) {
-    const config = {
-      env: {},
-      rules: {
-        'import/no-extraneous-dependencies': 'off',
-      },
-    };
-    if (hasMocha) {
-      Object.assign(config.env, { mocha: true });
-    } else if (hasJest) {
-      Object.assign(config.env, { jest: true });
+    const testPath = 'tests/unit';
+    const testHasConfig = micromatch.some(
+      getDirectoryEntries(path.resolve(api.resolve('.'), testPath)),
+      ['.eslintrc', '.eslintrc.{js,json,yaml,yml}'],
+      { dot: true },
+    );
+
+    if (!testHasConfig) {
+      const config = {
+        env: {},
+        rules: {
+          'import/no-extraneous-dependencies': 'off',
+        },
+      };
+      if (hasMocha) {
+        Object.assign(config.env, { mocha: true });
+      } else if (hasJest) {
+        Object.assign(config.env, { jest: true });
+      }
+      api.render((files) => {
+        files[`${testPath}/.eslintrc.js`] = `module.exports = ${stringifyJS(config, null, 2)};`;
+      });
     }
-    api.render((files) => {
-      files['tests/unit/.eslintrc.js'] = `module.exports = ${stringifyJS(config, null, 2)};`;
-    });
   }
 
   if (api.hasPlugin('e2e-cypress')) {
-    const config = {
-      env: {
-        mocha: true,
-      },
-      globals: {
-        cy: false,
-        Cypress: false,
-        expect: false,
-        assert: false,
-      },
-    };
-    api.render((files) => {
-      files['tests/e2e/.eslintrc.js'] = `module.exports = ${stringifyJS(config, null, 2)};`;
-    });
+    const e2ePath = 'tests/e2e';
+    const e2eHasConfig = micromatch.some(
+      getDirectoryEntries(path.resolve(api.resolve('.'), e2ePath)),
+      ['.eslintrc', '.eslintrc.{js,json,yaml,yml}'],
+      { dot: true },
+    );
+
+    if (!e2eHasConfig) {
+      const config = {
+        env: {
+          mocha: true,
+        },
+        globals: {
+          cy: false,
+          Cypress: false,
+          expect: false,
+          assert: false,
+        },
+      };
+      api.render((files) => {
+        files[`${e2ePath}/.eslintrc.js`] = `module.exports = ${stringifyJS(config, null, 2)};`;
+      });
+    }
   }
 
   // lint & fix after create to ensure files adhere to chosen config
