@@ -34,7 +34,7 @@ module.exports = (api, { overwriteConfig, config, lintOn = [] }) => {
     case '@vue/eslint-config-airbnb':
     case '@vue/eslint-config-standard':
     case '@vue/eslint-config-prettier':
-      configs.push(config);
+      configs.push(config, 'plugin:vue/essential');
       Object.assign(pkg.devDependencies, { [config]: '^3.0.0-beta.6' });
       break;
     case 'eva/franxx':
@@ -49,7 +49,7 @@ module.exports = (api, { overwriteConfig, config, lintOn = [] }) => {
       break;
     case 'eslint:recommended':
     default:
-      configs.push('eslint:recommended');
+      configs.push('eslint:recommended', 'plugin:vue/essential');
   }
 
   if (api.hasPlugin('typescript')) {
