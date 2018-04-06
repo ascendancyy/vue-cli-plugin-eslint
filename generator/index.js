@@ -59,13 +59,7 @@ module.exports = (api, { lintOn = [] }) => {
 
   if (hasMocha || hasJest) {
     const testPath = 'tests/unit';
-    const testHasConfig = micromatch.some(
-      getDirectoryEntries(path.resolve(api.resolve('.'), testPath)),
-      ['.eslintrc', '.eslintrc.{js,json,yaml,yml}'],
-      { dot: true },
-    );
-
-    if (!testHasConfig) {
+    if (!hasESLintConfig(path.resolve(api.resolve('.'), testPath))) {
       const config = {
         env: {},
         rules: {
@@ -85,13 +79,7 @@ module.exports = (api, { lintOn = [] }) => {
 
   if (api.hasPlugin('e2e-cypress')) {
     const e2ePath = 'tests/e2e';
-    const e2eHasConfig = micromatch.some(
-      getDirectoryEntries(path.resolve(api.resolve('.'), e2ePath)),
-      ['.eslintrc', '.eslintrc.{js,json,yaml,yml}'],
-      { dot: true },
-    );
-
-    if (!e2eHasConfig) {
+    if (!hasESLintConfig(path.resolve(api.resolve('.'), e2ePath))) {
       const config = {
         env: {
           mocha: true,
