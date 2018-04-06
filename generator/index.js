@@ -52,6 +52,13 @@ module.exports = (api, { overwriteConfig, config, lintOn = [] }) => {
       configs.push('eslint:recommended');
   }
 
+  if (api.hasPlugin('typescript')) {
+    configs.push('@vue/eslint-config-typescript');
+    Object.assign(pkg.devDependencies, {
+      '@vue/eslint-config-typescript': '^3.0.0-beta.6',
+    });
+  }
+
   if (!lintOn.includes('save')) {
     pkg.vue = {
       lintOnSave: false, // eslint-loader configured in runtime plugin

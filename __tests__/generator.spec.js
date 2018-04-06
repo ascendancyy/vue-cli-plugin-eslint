@@ -49,6 +49,26 @@ test('prettier', async () => {
   expect(pkg.devDependencies).toHaveProperty('@vue/eslint-config-prettier');
 });
 
+test('typescript', async () => {
+  const { pkg } = await generateWithPlugin([
+    {
+      id: 'eslint',
+      apply: require('../generator'),
+      options: {
+        config: '@vue/eslint-config-prettier',
+      },
+    }, {
+      id: 'typescript',
+      apply: require('@vue/cli-plugin-typescript/generator'),
+      options: {},
+    },
+  ]);
+
+  expect(pkg.scripts.lint).toBeTruthy();
+  expect(pkg.devDependencies).toHaveProperty('@vue/eslint-config-prettier');
+  expect(pkg.devDependencies).toHaveProperty('@vue/eslint-config-typescript');
+});
+
 test('lint on save', async () => {
   const { pkg } = await generateWithPlugin({
     id: 'eslint',

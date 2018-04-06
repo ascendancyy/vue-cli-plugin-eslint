@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (api) => {
   const options = {
     extensions: ['.js', '.vue'],
     env: {
@@ -13,10 +13,16 @@ module.exports = () => {
   };
 
   options.parserOptions = {
-    parser: require.resolve('babel-eslint'),
     sourceType: 'module',
     allowImportExportEverywhere: true,
   };
+
+  if (!api.hasPlugin('typescript')) {
+    options.parserOptions.parser = require.resolve('babel-eslint');
+  } else {
+    // typescript parser added by @vue/eslint-config-typescript
+    options.extensions.push('.ts');
+  }
 
   return options;
 };
