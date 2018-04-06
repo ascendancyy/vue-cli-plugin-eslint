@@ -8,19 +8,16 @@
 
 const lint = require('../lint');
 const stringifyJS = require('javascript-stringify');
-const micromatch = require('micromatch');
-const fs = require('fs');
 const path = require('path');
+const { hasESLintConfig } = require('../utils');
+const chalk = require('chalk');
 
-function getDirectoryEntries(directory) {
-  try {
-    return fs.readdirSync(directory);
-  } catch (e) {
-    return [];
+module.exports = (api, { overwriteConfig, config, lintOn = [] }) => {
+  if (overwriteConfig === 'abort') {
+    api.exitLog(chalk`{yellow Plugin setup successfully cancelled}`, 'warn');
+    return;
   }
-}
 
-module.exports = (api, { lintOn = [] }) => {
   if (typeof lintOn === 'string') {
     lintOn = lintOn.split(','); // eslint-disable-line no-param-reassign
   }
@@ -31,6 +28,29 @@ module.exports = (api, { lintOn = [] }) => {
     },
     devDependencies: {},
   };
+
+  const configs = [];
+  switch (config) {
+    case '@vue/eslint-config-airbnb':
+    case '@vue/eslint-config-standard':
+    case '@vue/eslint-config-prettier':
+      configs.push(config);
+      Object.assign(pkg.devDependencies, { [config]: '^3.0.0-beta.6' });
+      break;
+    case 'eva/franxx':
+      configs.push(
+        '@ascendancyy/eslint-config-eva',
+        '@ascendancyy/eslint-config-franxx',
+      );
+      Object.assign(pkg.devDependencies, {
+        '@ascendancyy/eslint-config-eva': '^2.0.0',
+        '@ascendancyy/eslint-config-franxx': '^1.0.0',
+      });
+      break;
+    case 'eslint:recommended':
+    default:
+      configs.push('eslint:recommended');
+  }
 
   if (!lintOn.includes('save')) {
     pkg.vue = {
@@ -51,7 +71,7 @@ module.exports = (api, { lintOn = [] }) => {
     };
   }
 
-  api.render('./template');
+  api.render('./template', { configs });
   api.extendPackage(pkg);
 
   const hasMocha = api.hasPlugin('unit-mocha');

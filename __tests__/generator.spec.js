@@ -10,6 +10,45 @@ test('base', async () => {
   expect(pkg.scripts.lint).toBeTruthy();
 });
 
+test('airbnb', async () => {
+  const { pkg } = await generateWithPlugin({
+    id: '@ascendancyy/vue-cli-plugin-stylelint',
+    apply: require('../generator'),
+    options: {
+      config: '@vue/eslint-config-airbnb',
+    },
+  });
+
+  expect(pkg.scripts.lint).toBeTruthy();
+  expect(pkg.devDependencies).toHaveProperty('@vue/eslint-config-airbnb');
+});
+
+test('standard', async () => {
+  const { pkg } = await generateWithPlugin({
+    id: '@ascendancyy/vue-cli-plugin-stylelint',
+    apply: require('../generator'),
+    options: {
+      config: '@vue/eslint-config-standard',
+    },
+  });
+
+  expect(pkg.scripts.lint).toBeTruthy();
+  expect(pkg.devDependencies).toHaveProperty('@vue/eslint-config-standard');
+});
+
+test('prettier', async () => {
+  const { pkg } = await generateWithPlugin({
+    id: '@ascendancyy/vue-cli-plugin-stylelint',
+    apply: require('../generator'),
+    options: {
+      config: '@vue/eslint-config-prettier',
+    },
+  });
+
+  expect(pkg.scripts.lint).toBeTruthy();
+  expect(pkg.devDependencies).toHaveProperty('@vue/eslint-config-prettier');
+});
+
 test('lint on save', async () => {
   const { pkg } = await generateWithPlugin({
     id: 'eslint',
